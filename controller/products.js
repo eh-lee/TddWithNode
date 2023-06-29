@@ -1,7 +1,8 @@
-const productModel = require("./../models/Product");
-exports.createProduct = (req, res, next) => {
+const Product = require("./../models/Product");
+exports.createProduct = async (req, res, next) => {
     // 그냥 create method임.
-    const sample = productModel.create(req.body);
+    const sample = await Product.create(req.body);
+    console.log("sample=======>", sample);
     res.status(201).json(sample);
 };
 
