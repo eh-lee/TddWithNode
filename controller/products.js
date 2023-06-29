@@ -1,5 +1,5 @@
+const productModel = require("../models/Product");
 
-//middleware
-exports.hello = (req, res) => {
-    res.send("hello");
+exports.createProduct = () => {
+    productModel.create();
 };
