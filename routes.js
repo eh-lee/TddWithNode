@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send("Products");
-});
+//middleware 선언 && 호출
+const productController = require("./controller/products");
+router.get('/', productController.hello);
 
 module.exports = router;
