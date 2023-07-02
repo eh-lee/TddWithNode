@@ -19,9 +19,17 @@ describe("Product Controller Create", () => {
     it("should have a createProduct func", () => {
         expect(typeof productController.createProduct).toBe("function");
     });
+
     it("should call ProductModel.create", () => {
         productController.createProduct(req, res, next);
         expect(productModel.create).toBeCalledWith(newProduct);
+    })
+
+    it("should return 201 res code", () => {
+        productController.createProduct(req, res, next);
+        expect(res.statusCode).toBe(201);
+        expect(res._isEndCalled()).toBeTruthy();
+        // send가 있다면, send(결과값)가 잘 전달되었는지 확인
     })
 });
 
