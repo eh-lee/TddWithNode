@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.use((error, req, res, next) => {
-    res.status(500).json({ message: error.messgae })
+    res.status(500).json({ message: error.message })
 })
 
 // app.listen(PORT);
