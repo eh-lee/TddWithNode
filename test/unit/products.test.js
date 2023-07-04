@@ -3,7 +3,9 @@ const productModel = require('../../models/Product');
 const httpMocks = require('node-mocks-http');
 const newProduct = require('../data/new-product.json');
 const Product = require("../../models/Product");
+const allProducts = require("../data/all-products.json");
 productModel.create = jest.fn();
+productModel.find = jest.fn();
 
 let req, res, next;
 beforeEach(() => {
@@ -54,5 +56,23 @@ describe("Product Controller Create", () => {
 describe("Product Controller Get", () => {
     it("should have a getProducts function", () => {
         expect(typeof productController.getProducts).toBe("function");
+    })
+
+    it("should call ProductModel.find({})", async () => {
+        // Product 안의 모든 값을 조건 없이 가져온다
+        await productController.getProducts(req, res, next);
+        expect(productModel.find).toHaveBeenCalledWith({});
+    })
+
+    it("should return 200 res", async () => {
+        await productController.getProducts(res, req, next);
+        expect(res.statusCode).toBe(200);
+        expect(res._isEndCalled).toBeTruthy();
+    })
+
+    it("should return json body in res", async () => {
+        productModel.find.mockReturnValue(allProducts);
+        await productController.getProducts(req, res, next);
+        expect(res._getJSONData()).toStrictEqual(allProducts);
     })
 })
