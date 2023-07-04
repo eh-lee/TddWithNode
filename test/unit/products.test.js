@@ -49,3 +49,10 @@ describe("Product Controller Create", () => {
         // next : middleware 인자. 비동기 요청에 대한 error handling.
     })
 });
+
+
+describe("Product Controller Get", () => {
+    it("should have a getProducts function", () => {
+        expect(typeof productController.getProducts).toBe("function");
+    })
+})
