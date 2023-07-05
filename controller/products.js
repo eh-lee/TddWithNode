@@ -18,3 +18,7 @@ exports.getProducts = async (req, res, next) => {
         next(error)
     }
 }
+
+exports.getProductById = async (req, res, nect) => {
+    await productModel.findById(req.params.productId);
+}
