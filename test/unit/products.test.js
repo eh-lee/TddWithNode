@@ -8,8 +8,10 @@ const allProducts = require("../data/all-products.json");
 productModel.create = jest.fn();
 productModel.find = jest.fn();
 productModel.findById = jest.fn();
+productModel.findByIdAndUpdate = jest.fn();
 
 const productId = "5sdfdsfdsfsdfwe"
+const updatedProduct = { name: "updated name", description: "update description" };
 
 let req, res, next;
 beforeEach(() => {
@@ -122,5 +124,62 @@ describe("Product Controller GetById", () => {
         Product.findById.mockReturnValue(rejectedPromise);
         await productController.getProductById(req, res, next);
         expect(next).toHaveBeenCalledWith(errorMessage);
+    })
+})
+
+
+// =============================================================
+// ========================== GET ==============================
+// =============================================================
+
+it("GET /api/products", async () => {
+    const response = await request(app).get('/api/products');
+    expect(response.statusCode).toBe(200);
+    expect(Array.isArray(response.body)).toBeTruthy();
+    expect(response.body[0].name).toBeDefined();
+    expect(response.body[0].description).toBeDefined();
+    firstProduct = response.body[0];
+})
+
+it("GET /api/product/:productId", async () => {
+    const response = await request(app).get('/api/products/' + firstProduct._id)
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toBe(firstProduct.name);
+    expect(response.body.description).toBe(firstProduct.description);
+})
+
+it("GET id doesnt exist /api/product/:productId", async () => {
+    const response = await request(app).get('/api/products/64a141d3821cd55198345157');
+    expect(response.statusCode).toBe(404);
+})
+
+
+// =============================================================
+// ======================== UPDATE =============================
+// =============================================================
+
+describe("Product Controller Upadate", () => {
+    it("should have an upadateProduct func", () => {
+        expect(typeof productController.updateProduct).toBe("function");
+    })
+
+    it("should call productModel.findByIdAndUpdate", async () => {
+        req.params.productId = productId;
+        req.body = updatedProduct;
+        await productController.updateProduct(req, res, next);
+        expect(productModel.findByIdAndUpdate).toHaveBeenCalledWith(
+            productId, { name: "updated name", description: "update description" },
+            { new: true }
+        )
+    })
+
+    it("should return json body and res code 200", async () => {
+        req.params.productId = productId;
+        req.body = updatedProduct;
+        productModel.findByIdAndUpdate.mockReturnValue(updatedProduct)
+        await productController.updateProduct(req, res, next);
+        expect(res._isEndCalled()).toBeTruthy();
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(updatedProduct);
     })
 })
