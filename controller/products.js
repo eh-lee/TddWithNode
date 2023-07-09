@@ -33,7 +33,6 @@ exports.getProductById = async (req, res, next) => {
 }
 
 exports.updateProduct = async (req, res, next) => {
-
     try {
         let updatedProduct = await productModel.findByIdAndUpdate(
             req.params.productId,
